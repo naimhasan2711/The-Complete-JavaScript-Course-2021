@@ -34,6 +34,8 @@ document.addEventListener('keydown', function (e) {
 ///////////////////////////////////////
 // Lecture
 
+/*
+
 //selecting elements
 const allSections = document.querySelectorAll('.section');
 console.log(allSections);
@@ -54,4 +56,57 @@ header.prepend(message);
 //delete elements
 document.querySelector('.btn--close-cookie').addEventListener('click', () => {
   message.remove();
+});
+
+//style
+
+message.style.backgroundColor = '#37383d';
+message.style.width = '120%';
+
+console.log(message.style.height);
+console.log(message.style.backgroundColor);
+
+console.log(getComputedStyle(message).height);
+
+message.style.height =
+  Number.parseFloat(getComputedStyle(message).height, 10) + 30 + 'px';
+
+document.documentElement.style.setProperty('--color-primary', 'orangered');
+
+//attributes
+
+const logo = document.querySelector('.nav__logo');
+console.log(logo.alt);
+console.log(logo.src);
+console.log(logo.className);
+
+//non-standard
+console.log(logo.designer);
+console.log(logo.getAttribute('designer'));
+
+logo.setAttribute('company', 'bankist');
+
+console.log(logo.src);
+console.log(logo.getAttribute('src'));
+
+//data-attributes
+
+*/
+
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+
+btnScrollTo.addEventListener('click', e => {
+  const s1cords = section1.getBoundingClientRect();
+  console.log(s1cords);
+
+  //scrolling: old style
+  // window.scrollTo({
+  //   left: s1cords.left + window.pageXOffset,
+  //   top: s1cords.top + window.pageYOffset,
+  //   behavior: 'smooth',
+  // });
+
+  //scrolling: modern style
+  section1.scrollIntoView({ behavior: 'smooth' });
 });
