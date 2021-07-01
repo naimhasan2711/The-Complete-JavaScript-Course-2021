@@ -8,6 +8,8 @@ const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
 
 const openModal = function (e) {
   e.preventDefault();
@@ -31,6 +33,46 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
+//smoth scrolling for button
+btnScrollTo.addEventListener('click', e => {
+  const s1cords = section1.getBoundingClientRect();
+  console.log(s1cords);
+
+  // //scrolling: old style
+  // window.scrollTo({
+  //   left: s1cords.left + window.pageXOffset,
+  //   top: s1cords.top + window.pageYOffset,
+  //   behavior: 'smooth',
+  // });
+
+  //scrolling: modern style
+  section1.scrollIntoView({ behavior: 'smooth' });
+});
+
+///////////////////////////////////////
+//Page navigation
+
+////inefficient way
+// document.querySelectorAll('.nav__link').forEach(function (el) {
+//   el.addEventListener('click', function (e) {
+//     e.preventDefault();
+//     const id = this.getAttribute('href');
+//     console.log(id);
+//     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+//   });
+// });
+
+////efficient way
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  e.preventDefault();
+  if (e.target.classList.contains('nav__link')) {
+    const id = e.target.getAttribute('href');
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+///////////////////////////////////////
+///////////////////////////////////////
 ///////////////////////////////////////
 // Lecture
 
@@ -93,20 +135,65 @@ console.log(logo.getAttribute('src'));
 
 */
 
-const btnScrollTo = document.querySelector('.btn--scroll-to');
-const section1 = document.querySelector('#section--1');
+//mouse enter event
 
-btnScrollTo.addEventListener('click', e => {
-  const s1cords = section1.getBoundingClientRect();
-  console.log(s1cords);
+// const h1 = document.querySelector('h1');
 
-  //scrolling: old style
-  // window.scrollTo({
-  //   left: s1cords.left + window.pageXOffset,
-  //   top: s1cords.top + window.pageYOffset,
-  //   behavior: 'smooth',
-  // });
+// const h1Event = function (e) {
+//   alert('You are now reading a heading');
+// };
 
-  //scrolling: modern style
-  section1.scrollIntoView({ behavior: 'smooth' });
-});
+// h1.addEventListener('mouseenter', h1Event);
+
+// setTimeout(() => {
+//   h1.removeEventListener('mouseenter', h1Event);
+// }, 3000);
+
+//event propagation in practice
+
+// const randomInt = (min, max) =>
+//   Math.floor(Math.random() * (max - min + 1) + min);
+
+// const randomColor = () =>
+//   `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
+
+// document.querySelector('.nav__link').addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log('link', e.target, e.currentTarget);
+// });
+
+// document.querySelector('.nav__links').addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log('container', e.target, e.currentTarget);
+// });
+
+// document.querySelector('.nav').addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log('nav', e.target, e.currentTarget);
+// });
+
+////////////////////////////////
+//dom traversing
+
+const h1 = document.querySelector('h1');
+
+//going downward:child
+console.log(h1.querySelectorAll('.highlight'));
+console.log(h1.childNodes);
+console.log(h1.children);
+
+h1.firstElementChild.style.color = 'white';
+h1.lastElementChild.style.color = 'orangered';
+
+//going upward:parent
+
+console.log(h1.parentNode);
+console.log(h1.parentElement);
+
+h1.closest('.header').style.background = 'var(--gradient-secondary)';
+
+//going sideways: selecting shiblings
+console.log(h1.previousElementSibling);
+console.log(h1.nextElementSibling);
+
+console.log(h1.parentElement.children);
