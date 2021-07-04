@@ -71,6 +71,31 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
   }
 });
 
+////tapped components
+
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsConatiner = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+tabsConatiner.addEventListener('click', function (e) {
+  const clicked = e.target.closest('.operations__tab');
+
+  //guard class
+  if (!clicked) return;
+
+  //remove old active class
+  tabs.forEach(t => t.classList.remove('operations__tab--active'));
+  tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+
+  //add active class for tabs
+  clicked.classList.add('operations__tab--active');
+
+  //add active class for contents
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add('operations__content--active');
+});
+
 ///////////////////////////////////////
 ///////////////////////////////////////
 ///////////////////////////////////////
@@ -175,25 +200,25 @@ console.log(logo.getAttribute('src'));
 ////////////////////////////////
 //dom traversing
 
-const h1 = document.querySelector('h1');
+// const h1 = document.querySelector('h1');
 
-//going downward:child
-console.log(h1.querySelectorAll('.highlight'));
-console.log(h1.childNodes);
-console.log(h1.children);
+// //going downward:child
+// console.log(h1.querySelectorAll('.highlight'));
+// console.log(h1.childNodes);
+// console.log(h1.children);
 
-h1.firstElementChild.style.color = 'white';
-h1.lastElementChild.style.color = 'orangered';
+// h1.firstElementChild.style.color = 'white';
+// h1.lastElementChild.style.color = 'orangered';
 
-//going upward:parent
+// //going upward:parent
 
-console.log(h1.parentNode);
-console.log(h1.parentElement);
+// console.log(h1.parentNode);
+// console.log(h1.parentElement);
 
-h1.closest('.header').style.background = 'var(--gradient-secondary)';
+// h1.closest('.header').style.background = 'var(--gradient-secondary)';
 
-//going sideways: selecting shiblings
-console.log(h1.previousElementSibling);
-console.log(h1.nextElementSibling);
+// //going sideways: selecting shiblings
+// console.log(h1.previousElementSibling);
+// console.log(h1.nextElementSibling);
 
-console.log(h1.parentElement.children);
+// console.log(h1.parentElement.children);
