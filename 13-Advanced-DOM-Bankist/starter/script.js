@@ -42,29 +42,12 @@ btnScrollTo.addEventListener('click', e => {
   const s1cords = section1.getBoundingClientRect();
   console.log(s1cords);
 
-  // //scrolling: old style
-  // window.scrollTo({
-  //   left: s1cords.left + window.pageXOffset,
-  //   top: s1cords.top + window.pageYOffset,
-  //   behavior: 'smooth',
-  // });
-
   //scrolling: modern style
   section1.scrollIntoView({ behavior: 'smooth' });
 });
 
 ///////////////////////////////////////
 //Page navigation
-
-////inefficient way
-// document.querySelectorAll('.nav__link').forEach(function (el) {
-//   el.addEventListener('click', function (e) {
-//     e.preventDefault();
-//     const id = this.getAttribute('href');
-//     console.log(id);
-//     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
-//   });
-// });
 
 ////efficient way
 document.querySelector('.nav__links').addEventListener('click', function (e) {
@@ -116,138 +99,160 @@ nav.addEventListener('mouseout', handleHover.bind(1));
 
 ////sticy navigation
 
-const initialcords = section1.getBoundingClientRect();
+//const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect().height;
 
-window.addEventListener('scroll', function () {
-  if (this.window.scrollY > initialcords.top) {
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  //console.log(entry);
+
+  if (!entry.isIntersecting) {
     nav.classList.add('sticky');
   } else {
     nav.classList.remove('sticky');
   }
+};
+
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
 });
-///////////////////////////////////////
-///////////////////////////////////////
-///////////////////////////////////////
-// Lecture
 
-/*
+headerObserver.observe(header);
 
-//selecting elements
+////reveals sections
+
 const allSections = document.querySelectorAll('.section');
-console.log(allSections);
 
-const allButtons = document.getElementsByTagName('button');
-console.log(allButtons);
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+  //console.log(entry);
 
-//creating and inserting elements
+  if (!entry.isIntersecting) return;
 
-const message = document.createElement('dev');
-message.classList.add('cookie-message');
+  entry.target.classList.remove('section--hidden');
+  observer.unobserve(entry.target);
+};
 
-message.innerHTML =
-  'We use cookies for improve functionality and analytics. <button class="btn btn--close-cookie">Got it!</button>';
-
-header.prepend(message);
-
-//delete elements
-document.querySelector('.btn--close-cookie').addEventListener('click', () => {
-  message.remove();
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.18,
 });
 
-//style
+allSections.forEach(function (section) {
+  sectionObserver.observe(section);
+  //section.classList.add('section--hidden');
+});
 
-message.style.backgroundColor = '#37383d';
-message.style.width = '120%';
+////lazy loading internet
 
-console.log(message.style.height);
-console.log(message.style.backgroundColor);
+const imgTargets = document.querySelectorAll('img[data-src]');
 
-console.log(getComputedStyle(message).height);
+const loading = function (entries, observer) {
+  const [entry] = entries;
+  console.log(entry);
 
-message.style.height =
-  Number.parseFloat(getComputedStyle(message).height, 10) + 30 + 'px';
+  if (!entry.isIntersecting) return;
 
-document.documentElement.style.setProperty('--color-primary', 'orangered');
+  //replacing src with data-src
+  entry.target.src = entry.target.dataset.src;
 
-//attributes
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img');
+  });
+  observer.unobserve(entry.target);
+};
 
-const logo = document.querySelector('.nav__logo');
-console.log(logo.alt);
-console.log(logo.src);
-console.log(logo.className);
+const imgObserver = new IntersectionObserver(loading, {
+  root: null,
+  threshold: 0,
+  rootMargin: '-200px',
+});
 
-//non-standard
-console.log(logo.designer);
-console.log(logo.getAttribute('designer'));
+imgTargets.forEach(img => imgObserver.observe(img));
 
-logo.setAttribute('company', 'bankist');
+////slider components
+const slider = function () {
+  const slides = document.querySelectorAll('.slide');
+  const btnLeft = document.querySelector('.slider__btn--left');
+  const btnRight = document.querySelector('.slider__btn--right');
+  const dotContainer = document.querySelector('.dots');
 
-console.log(logo.src);
-console.log(logo.getAttribute('src'));
+  let curSlide = 0;
+  const maxSlide = slides.length;
 
-//data-attributes
+  // Functions
+  const createDots = function () {
+    slides.forEach(function (_, i) {
+      dotContainer.insertAdjacentHTML(
+        'beforeend',
+        `<button class="dots__dot" data-slide="${i}"></button>`
+      );
+    });
+  };
 
-*/
+  const activateDot = function (slide) {
+    document
+      .querySelectorAll('.dots__dot')
+      .forEach(dot => dot.classList.remove('dots__dot--active'));
 
-//mouse enter event
+    document
+      .querySelector(`.dots__dot[data-slide="${slide}"]`)
+      .classList.add('dots__dot--active');
+  };
 
-// const h1 = document.querySelector('h1');
+  const goToSlide = function (slide) {
+    slides.forEach(
+      (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
+    );
+  };
 
-// const h1Event = function (e) {
-//   alert('You are now reading a heading');
-// };
+  // Next slide
+  const nextSlide = function () {
+    if (curSlide === maxSlide - 1) {
+      curSlide = 0;
+    } else {
+      curSlide++;
+    }
 
-// h1.addEventListener('mouseenter', h1Event);
+    goToSlide(curSlide);
+    activateDot(curSlide);
+  };
 
-// setTimeout(() => {
-//   h1.removeEventListener('mouseenter', h1Event);
-// }, 3000);
+  const prevSlide = function () {
+    if (curSlide === 0) {
+      curSlide = maxSlide - 1;
+    } else {
+      curSlide--;
+    }
+    goToSlide(curSlide);
+    activateDot(curSlide);
+  };
 
-//event propagation in practice
+  const init = function () {
+    goToSlide(0);
+    createDots();
 
-// const randomInt = (min, max) =>
-//   Math.floor(Math.random() * (max - min + 1) + min);
+    activateDot(0);
+  };
+  init();
 
-// const randomColor = () =>
-//   `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
+  // Event handlers
+  btnRight.addEventListener('click', nextSlide);
+  btnLeft.addEventListener('click', prevSlide);
 
-// document.querySelector('.nav__link').addEventListener('click', function (e) {
-//   this.style.backgroundColor = randomColor();
-//   console.log('link', e.target, e.currentTarget);
-// });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') prevSlide();
+    e.key === 'ArrowRight' && nextSlide();
+  });
 
-// document.querySelector('.nav__links').addEventListener('click', function (e) {
-//   this.style.backgroundColor = randomColor();
-//   console.log('container', e.target, e.currentTarget);
-// });
-
-// document.querySelector('.nav').addEventListener('click', function (e) {
-//   this.style.backgroundColor = randomColor();
-//   console.log('nav', e.target, e.currentTarget);
-// });
-
-////////////////////////////////
-//dom traversing
-
-// const h1 = document.querySelector('h1');
-
-// //going downward:child
-// console.log(h1.querySelectorAll('.highlight'));
-// console.log(h1.childNodes);
-// console.log(h1.children);
-
-// h1.firstElementChild.style.color = 'white';
-// h1.lastElementChild.style.color = 'orangered';
-
-// //going upward:parent
-
-// console.log(h1.parentNode);
-// console.log(h1.parentElement);
-
-// h1.closest('.header').style.background = 'var(--gradient-secondary)';
-
-// //going sideways: selecting shiblings
-// console.log(h1.previousElementSibling);
-// console.log(h1.nextElementSibling);
-
-// console.log(h1.parentElement.children);
+  dotContainer.addEventListener('click', function (e) {
+    if (e.target.classList.contains('dots__dot')) {
+      const { slide } = e.target.dataset;
+      goToSlide(slide);
+      activateDot(slide);
+    }
+  });
+};
+slider();
