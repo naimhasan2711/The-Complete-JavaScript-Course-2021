@@ -68,7 +68,7 @@ Array.prototype.unique = function () {
 
 console.log(arr.unique());
 */
-
+/*
 console.log(
   '--------------------------- coding challenge 1-------------------------'
 );
@@ -102,3 +102,74 @@ Marcedez.accelerate();
 
 Marcedez.brake();
 Marcedez.brake();
+*/
+
+console.log('--------------------------- ES6 CLASSES-------------------------');
+
+class PersonCl {
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  //method will be added to prototype property
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.fullName}.`);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  set fullName(name) {
+    if (name.includes(' ')) this._fullName = name;
+    else alert(`${name} is not a full name!`);
+  }
+
+  get fullName() {
+    return this._fullName;
+  }
+}
+
+const sarah = new PersonCl('Sarah Hasan', 2019);
+console.log(sarah);
+
+const walter = new PersonCl('Walter', 1966);
+
+// PersonCl.prototype.greet = function () {
+//   console.log(`Hey ${this.firstName}.`);
+// };
+
+sarah.greet();
+console.log(sarah.age);
+
+// 1. Classes are not hoisted
+// 2. Classes are first class citizen
+// 3. Classes are executed in strick mode
+
+console.log('----------getters and setters--------------');
+
+const account = {
+  owner: 'naim',
+  movements: [25, 20, 35, 50, 200, 150],
+
+  get latest() {
+    return this.movements.slice(-1).pop();
+  },
+
+  set latest(mov) {
+    this.movements.push(mov);
+  },
+};
+
+console.log(account);
+
+console.log(account.latest);
+
+account.latest = 50;
+
+console.log(account.movements);
