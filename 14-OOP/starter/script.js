@@ -205,6 +205,7 @@ const ayat = Object.create(PersonProto);
 ayat.init('Ayat', 2021);
 ayat.calcAge();
 */
+/*
 console.log(
   '--------------------------- coding challenge 2-------------------------'
 );
@@ -250,3 +251,93 @@ console.log(ford);
 ford.sppedUS = 50;
 
 console.log(ford);
+
+*/
+/*
+console.log(
+  '--------------------------- Inheritense between classes-------------------------'
+);
+
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function () {
+  console.log(2037 - this.birthYear);
+};
+
+const Student = function (firstName, birthYear, course) {
+  Person.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+Student.prototype = Object.create(Person.prototype);
+
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.firstName} and I'm studying ${this.course}`);
+};
+
+const mike = new Student('Naim', 1993, 'CSE');
+console.log(mike);
+
+mike.introduce();
+mike.calcAge();
+
+console.log(mike.__proto__);
+console.log(mike.__proto__.__proto__);
+
+console.log(mike instanceof Student);
+console.log(mike instanceof Person);
+console.log(mike instanceof Object);
+
+Student.prototype.constructor = Student;
+
+console.dir(Student.prototype.constructor);
+
+
+*/
+
+console.log(
+  '--------------------------- coding challenge 3-------------------------'
+);
+
+const Car = function (make, speed) {
+  this.make = make;
+  this.speed = speed;
+};
+
+Car.prototype.accelerate = function () {
+  this.speed += 10;
+  console.log(`The car is going at ${this.speed} km/h`);
+};
+
+Car.prototype.brake = function () {
+  this.speed -= 5;
+  console.log(`The car is going at ${this.speed} km/h`);
+};
+
+const EV = function (make, speed, charge) {
+  Car.call(this, make, speed);
+  this.charge = charge;
+};
+
+EV.prototype = Object.create(Car.prototype);
+
+EV.prototype.chargeBattery = function (chargeTo) {
+  this.charge = chargeTo;
+};
+
+EV.prototype.accelerate = function () {
+  this.speed += 20;
+  this.charge--;
+  console.log(
+    `The car is going at ${this.speed} km/h and charge is ${this.charge}`
+  );
+};
+
+const tesla = new EV('Tesla', 120, 23);
+console.log(tesla);
+tesla.chargeBattery(90);
+console.log(tesla);
+tesla.accelerate();
