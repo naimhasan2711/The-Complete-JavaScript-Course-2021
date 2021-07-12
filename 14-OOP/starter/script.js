@@ -297,7 +297,7 @@ console.dir(Student.prototype.constructor);
 
 
 */
-
+/*
 console.log(
   '--------------------------- coding challenge 3-------------------------'
 );
@@ -341,3 +341,161 @@ console.log(tesla);
 tesla.chargeBattery(90);
 console.log(tesla);
 tesla.accelerate();
+
+*/
+/*
+console.log(
+  '--------------------------- ES6 inheritese-------------------------'
+);
+
+class PersonCl {
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  //method will be added to prototype property
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.fullName}.`);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  set fullName(name) {
+    if (name.includes(' ')) this._fullName = name;
+    else alert(`${name} is not a full name!`);
+  }
+
+  get fullName() {
+    return this._fullName;
+  }
+  static hey() {
+    console.log('Hey there..');
+  }
+}
+
+class StudentCl extends PersonCl {
+  constructor(fullName, birthYear, course) {
+    //always this need to happen first
+    super(fullName, birthYear);
+    this.course = course;
+  }
+
+  introduce() {
+    console.log(`My name is ${this._fullName} and I'm studying ${this.course}`);
+  }
+
+  calcAge() {
+    console.log(`I'm ${2037 - this.birthYear} years old.`);
+  }
+}
+
+const sarah = new StudentCl('Sarah Hasan', 2019, 'Artificial Intelligence');
+
+console.log(sarah);
+sarah.introduce();
+sarah.calcAge();
+sarah.greet();
+*/
+/*
+console.log(
+  '--------------------------- Object.create() inheritese-------------------------'
+);
+
+const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const steven = Object.create(PersonProto);
+
+const StudentProto = Object.create(PersonProto);
+StudentProto.init = function (firstName, birthYear, course) {
+  PersonProto.init.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+StudentProto.introduce = function () {
+  console.log(`My name is ${this.firstName} and I'm studying ${this.course}`);
+};
+
+const jay = Object.create(StudentProto);
+jay.init('Jay', 1986, 'CSE');
+jay.introduce();
+jay.calcAge();
+*/
+
+console.log(
+  '--------------------------- Object.create() inheritese-------------------------'
+);
+
+class Account {
+  //public fileds
+  locale = navigator.language;
+
+  //private fields
+  #movements = [];
+  #pin;
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    //Protected property
+    this.#pin = pin;
+    // this._movements = [];
+    // this.locale = navigator.language;
+
+    console.log(`Thanks for openning an account, ${this.owner}`);
+  }
+
+  getMovements() {
+    return this.#movements;
+  }
+
+  //public interface
+  deposite(val) {
+    this.#movements.push(val);
+  }
+
+  withdraw(val) {
+    this.deposite(-val);
+  }
+
+  //private method
+  #approavLoan(val) {
+    return true;
+  }
+
+  requestLoan(val) {
+    if (this.#approavLoan(val)) {
+      this.deposite(val);
+      console.log('Loan approaved');
+    }
+  }
+  static helper() {
+    console.log('Helper');
+  }
+}
+
+const account1 = new Account('Niam', 'BDT', 1111);
+
+account1.deposite(200);
+account1.deposite(150);
+account1.requestLoan(1000);
+
+console.log(account1);
+
+console.log(account1.getMovements());
+
+Account.helper();
