@@ -103,7 +103,7 @@ Marcedez.accelerate();
 Marcedez.brake();
 Marcedez.brake();
 */
-
+/*
 console.log('--------------------------- ES6 CLASSES-------------------------');
 
 class PersonCl {
@@ -133,12 +133,18 @@ class PersonCl {
   get fullName() {
     return this._fullName;
   }
+  static hey() {
+    console.log('Hey there..');
+    console.log(this);
+  }
 }
 
 const sarah = new PersonCl('Sarah Hasan', 2019);
 console.log(sarah);
 
-const walter = new PersonCl('Walter', 1966);
+PersonCl.hey();
+
+//const walter = new PersonCl('Walter', 1966);
 
 // PersonCl.prototype.greet = function () {
 //   console.log(`Hey ${this.firstName}.`);
@@ -173,3 +179,74 @@ console.log(account.latest);
 account.latest = 50;
 
 console.log(account.movements);
+
+console.log('----------Object.create()--------------');
+
+const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+
+  init(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  },
+};
+
+const steven = Object.create(PersonProto);
+
+console.log(steven);
+
+steven.name = 'Steven';
+steven.birthYear = 1988;
+steven.calcAge();
+
+const ayat = Object.create(PersonProto);
+ayat.init('Ayat', 2021);
+ayat.calcAge();
+*/
+console.log(
+  '--------------------------- coding challenge 2-------------------------'
+);
+
+class Car {
+  constructor(maker, speed) {
+    this.maker = maker;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed += 10;
+    console.log(`Speed after acceleration is ${this.speed} km/h`);
+  }
+
+  brake() {
+    this.speed -= 5;
+    console.log(`Spped after brake is ${this.speed} km/h`);
+  }
+  get sppedUS() {
+    return this.speed / 1.6;
+  }
+
+  set sppedUS(speed) {
+    this.speed = speed * 1.6;
+  }
+}
+
+const ford = new Car('Ford', 120);
+
+console.log(ford);
+
+console.log(ford.sppedUS);
+
+ford.accelerate();
+ford.accelerate();
+
+console.log(ford);
+
+ford.brake();
+console.log(ford);
+
+ford.sppedUS = 50;
+
+console.log(ford);
