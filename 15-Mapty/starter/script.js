@@ -132,7 +132,7 @@ class App {
     //add marker on click event in specific coordinate
     this.#map.on('click', this._showForm.bind(this));
     this.#workouts.forEach(work => {
-      this._renderWorkout(work);
+      //this._renderWorkout(work);
       this._renderWorkoutMarker(work);
     });
   }
