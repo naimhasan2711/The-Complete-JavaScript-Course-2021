@@ -20,12 +20,12 @@ const renderCountry = function (data, className = '') {
     `;
 
   countriesContainer.insertAdjacentHTML('beforeend', html);
-  //countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 
 const renderErrorMessage = function (msg) {
   countriesContainer.insertAdjacentHTML('beforeend', msg);
-  //countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 
 ////////////////////////////////////////////////////
@@ -137,6 +137,7 @@ console.log(
   '-------------------------------------consuming promises-----------------------------------------------'
 );
 
+/*
 // const getCountry = function (country) {
 //   fetch(`https://restcountries.eu/rest/v2/name/${country}`)
 //     .then(function (response) {
@@ -220,6 +221,159 @@ const getCountry = function (country) {
 
 btn.addEventListener('click', function () {
   getCountry('portugal');
+  btn.style.opacity = 0;
 });
 
 getCountry('australia');
+
+
+*/
+
+/*
+
+console.log(
+  '------------------------------------- coding challenge-1 -----------------------------------------------'
+);
+
+const whereIAm = function (lat, lng) {
+  fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
+    .then(response => {
+      if (!response.ok)
+        throw new Error(`Problem with geocoding ${response.status}`);
+      console.log(response);
+      return response.json();
+    })
+    .then(data => {
+      console.log(data);
+      console.log(`You are in ${data.city}, ${data.country}`);
+      return fetch(`https://restcountries.eu/rest/v2/name/${data.country}`);
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Country not found! ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => renderCountry(data[0]))
+    .catch(err => console.error(`${err.message}`));
+};
+//whereIAm(52.508, 13.816);
+whereIAm(46.9547658, 7.3248296);
+
+*/
+/*
+console.log(
+  '------------------------------------- event loop in practice -----------------------------------------------'
+);
+
+console.log('Test Start');
+
+setTimeout(() => console.log('0 second timer'), 0);
+Promise.resolve('resolve promises 1').then(res => console.log(res));
+Promise.resolve('resolve promises 2').then(res => {
+  for (let i = 0; i < 100000000; i++) {}
+  console.log(res);
+});
+
+console.log('Test End');
+
+*/
+/*
+console.log(
+  '------------------------------------- make our own promise-----------------------------------------------'
+);
+
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log(`Lottery draw is happening🔮`);
+  setTimeout(function () {
+    if (Math.random() >= 0.5) {
+      resolve(`You won💵`);
+    } else {
+      reject(new Error(`You lost your money💩`));
+    }
+  }, 2000);
+});
+
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setInterval(resolve, 1000 * seconds);
+  });
+};
+
+wait(1)
+  .then(() => {
+    console.log('I waited for 1 seconds');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('I waited for 2 seconds');
+  })
+  .then(() => {
+    console.log('I waited for 3 seconds');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('I waited for 4 seconds');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('I waited for 5 seconds');
+    return wait(1);
+  });
+
+  */
+
+console.log(
+  '------------------------------------- promisifying geolocation api-----------------------------------------------'
+);
+
+// navigator.geolocation.getCurrentPosition(
+//   position => console.log(position),
+//   err => console.error(err)
+// );
+
+console.log('getting current position!');
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    // navigator.geolocation.getCurrentPosition(
+    //   position => resolve(position),
+    //   err => reject(err)
+    // );
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+//getPosition().then(pos => console.log(pos));
+
+const whereIAm = function (lat, lng) {
+  getPosition()
+    .then(pos => {
+      const { latitude: lat, longitude: lng } = pos.coords;
+      return fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+    })
+
+    .then(response => {
+      if (!response.ok)
+        throw new Error(`Problem with geocoding ${response.status}`);
+      console.log(response);
+      return response.json();
+    })
+    .then(data => {
+      console.log(data);
+      console.log(`You are in ${data.city}, ${data.country}`);
+      return fetch(`https://restcountries.eu/rest/v2/name/${data.country}`);
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Country not found! ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => renderCountry(data[0]))
+    .catch(err => console.error(`${err.message}`));
+};
+
+btn.addEventListener('click', whereIAm);
