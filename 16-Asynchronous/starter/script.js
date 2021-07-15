@@ -3,6 +3,31 @@
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
+const renderCountry = function (data, className = '') {
+  const html = `
+    <article class="country  ${className}">
+      <img class="country__img" src="${data.flag}" />
+      <div class="country__data">
+        <h3 class="country__name">${data.name}</h3>
+        <h4 class="country__region">${data.region}</h4>
+        <p class="country__row"><span>👫</span>${(
+          +data.population / 1000000
+        ).toFixed(1)}M people</p>
+        <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
+        <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
+      </div>
+    </article>
+    `;
+
+  countriesContainer.insertAdjacentHTML('beforeend', html);
+  //countriesContainer.style.opacity = 1;
+};
+
+const renderErrorMessage = function (msg) {
+  countriesContainer.insertAdjacentHTML('beforeend', msg);
+  //countriesContainer.style.opacity = 1;
+};
+
 ////////////////////////////////////////////////////
 /*
 console.log(
@@ -54,26 +79,6 @@ console.log(
   '-------------------------------------our first ajax call-----------------------------------------------'
 );
 */
-
-const renderCountry = function (data, className = '') {
-  const html = `
-    <article class="country  ${className}">
-      <img class="country__img" src="${data.flag}" />
-      <div class="country__data">
-        <h3 class="country__name">${data.name}</h3>
-        <h4 class="country__region">${data.region}</h4>
-        <p class="country__row"><span>👫</span>${(
-          +data.population / 1000000
-        ).toFixed(1)}M people</p>
-        <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
-        <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
-      </div>
-    </article>
-    `;
-
-  countriesContainer.insertAdjacentHTML('beforeend', html);
-  countriesContainer.style.opacity = 1;
-};
 
 /*
 
@@ -155,7 +160,18 @@ const getCountry = function (country) {
       return fetch(`https://restcountries.eu/rest/v2/alpha/${neighbour}`);
     })
     .then(response => response.json())
-    .then(data => renderCountry(data, 'neighbour'));
+    .then(data => renderCountry(data, 'neighbour'))
+    .catch(error => {
+      console.error(`${error}`);
+      renderErrorMessage(`Something went wrong ${error.message}. Try again!.`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
 };
 
-getCountry('germany');
+btn.addEventListener('click', function () {
+  getCountry('portugal');
+});
+
+getCountry('dksjfsksd');
